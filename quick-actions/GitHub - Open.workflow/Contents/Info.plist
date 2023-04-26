@@ -12,7 +12,7 @@
 			<key>NSMenuItem</key>
 			<dict>
 				<key>default</key>
-				<string>Copy GitHub link to clipboard</string>
+				<string>GitHub - Open</string>
 			</dict>
 			<key>NSMessage</key>
 			<string>runWorkflowAsService</string>
