@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>AMApplicationBuild</key>
-	<string>521.1</string>
+	<string>523</string>
 	<key>AMApplicationVersion</key>
 	<string>2.10</string>
 	<key>AMDocumentVersion</key>
@@ -51,7 +51,44 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>source</key>
-					<string>on run {input, parameters}	tell application "Xcode"		set activeDocument to document 1 whose name ends with (word -1 of (get name of window 1))		set activeDocumentPath to path of activeDocument		set currentLines to selected paragraph range of activeDocument		set startLine to get item 1 of currentLines		set endLine to get item 2 of currentLines	end tell		set repositoryUrl to do shell script "cd $(dirname '" &amp; activeDocumentPath &amp; "'); git remote -v | grep fetch | awk '{print $2}' | sed 's/ssh:\\/\\/git@/https:\\/\\//' | sed 's/git@/https:\\/\\//' | sed 's/org-[0-9]*@/https:\\/\\//' | sed 's/com:/com\\//' | sed 's/\\.git//'"		set pathToRepositoryDirLocation to do shell script "cd $(dirname '" &amp; activeDocumentPath &amp; "'); git rev-parse --show-toplevel "		set activeFilePathInRepository to replace_text(activeDocumentPath, pathToRepositoryDirLocation, "")		set currentCommit to do shell script "cd $(dirname '" &amp; activeDocumentPath &amp; "'); git rev-parse HEAD"		set githubUrl to repositoryUrl &amp; "/blob/" &amp; currentCommit &amp; activeFilePathInRepository &amp; "#L" &amp; startLine &amp; "-L" &amp; endLine		do shell script "open " &amp; replace_text(githubUrl, " ", "%20")	return inputend runon replace_text(this_text, search_string, replacement_string)	set prevTIDs to AppleScript's text item delimiters	set AppleScript's text item delimiters to the search_string	set the item_list to every text item of this_text	set AppleScript's text item delimiters to the replacement_string	set this_text to the item_list as string	set AppleScript's text item delimiters to prevTIDs	return this_textend replace_text</string>
+					<string>on run {input, parameters}
+	tell application "Xcode"
+		set windowName to (get name of window 1)
+		if (word -1 of windowName) is equal to "Edited" then
+			set activeDocument to document 1 whose name ends with (word -2 of windowName)
+		else
+			set activeDocument to document 1 whose name ends with (word -1 of windowName)
+		end if
+		set activeDocumentPath to path of activeDocument
+		set currentLines to selected paragraph range of activeDocument
+		set startLine to get item 1 of currentLines
+		set endLine to get item 2 of currentLines
+	end tell
+	
+	
+	set repositoryUrl to do shell script "cd $(dirname '" &amp; activeDocumentPath &amp; "'); git remote -v | grep fetch | awk '{print $2}' | sed 's/ssh:\\/\\/git@/https:\\/\\//' | sed 's/git@/https:\\/\\//' | sed 's/org-[0-9]*@/https:\\/\\//' | sed 's/com:/com\\//' | sed 's/\\.git//'"
+	
+	set pathToRepositoryDirLocation to do shell script "cd $(dirname '" &amp; activeDocumentPath &amp; "'); git rev-parse --show-toplevel "
+	
+	set activeFilePathInRepository to replace_text(activeDocumentPath, pathToRepositoryDirLocation, "")
+	
+	set currentCommit to do shell script "cd $(dirname '" &amp; activeDocumentPath &amp; "'); git rev-parse HEAD"
+	
+	set githubUrl to repositoryUrl &amp; "/blob/" &amp; currentCommit &amp; activeFilePathInRepository &amp; "#L" &amp; startLine &amp; "-L" &amp; endLine
+	
+	do shell script "open " &amp; replace_text(githubUrl, " ", "%20")
+	return input
+end run
+
+on replace_text(this_text, search_string, replacement_string)
+	set prevTIDs to AppleScript's text item delimiters
+	set AppleScript's text item delimiters to the search_string
+	set the item_list to every text item of this_text
+	set AppleScript's text item delimiters to the replacement_string
+	set this_text to the item_list as string
+	set AppleScript's text item delimiters to prevTIDs
+	return this_text
+end replace_text</string>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.RunScript</string>
@@ -75,6 +112,8 @@
 				</array>
 				<key>OutputUUID</key>
 				<string>5C55476E-76A5-48E2-B408-8A0CA93A3695</string>
+				<key>ShowWhenRun</key>
+				<false/>
 				<key>UUID</key>
 				<string>177B93D3-94F4-4FBE-9A61-076E50462E5C</string>
 				<key>UnlocalizedApplications</key>
@@ -105,7 +144,7 @@ end run</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>469.500000:914.000000</string>
+				<string>414.500000:879.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
